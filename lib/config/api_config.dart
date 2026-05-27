@@ -28,8 +28,8 @@ class ApiConfig {
   // API Endpoints (Magic Laundry - Authentication)
   static const String checkAccountEndpoint = '/auth/check-account';
   static const String loginEndpoint = '/auth/login';
-  static const String sendOtpEndpoint = '/auth/send-otp-input';
-  static const String verifyOtpEndpoint = '/auth/check-input';
+  static const String sendOtpEndpoint = '/auth/login-number';
+  static const String verifyOtpEndpoint = '/auth/verification-otp';
   static const String registerEndpoint = '/auth/register';
   static const String logoutEndpoint = '/auth/logout';
   static const String refreshTokenEndpoint = '/auth/refresh-token';

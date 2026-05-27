@@ -1,3 +1,97 @@
 
-# FVM Version Cache
+# Flutter
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
 .fvm/
+
+# Build directories
+build/
+.dart_tool/
+.gradle/
+.idea/
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.config.dart
+*.modular.dart
+
+# Local dependencies
+pubspec.lock
+
+# Android
+android/local.properties
+android/.gradle/
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/build/
+
+# iOS
+ios/Flutter/Flutter.podspec
+ios/Flutter/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.xcframework
+ios/Flutter/GeneratedPluginRegistrant.*
+ios/.symlinks/
+ios/Pods/
+ios/Podfile.lock
+ios/Runner.xcworkspace/
+
+# macOS
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/Flutter/Flutter.framework
+macos/Pods/
+
+# Linux
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+linux/flutter/generated_plugins.cmake
+
+# Windows
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugins.cmake
+
+# Web
+web/flutter_service_worker.js
+web/index.html.bak
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+*.iml
+*.ipr
+*.iws
+*.sublime-project
+*.sublime-workspace
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Miscellaneous
+*.log
+*.pyc
+*.class
+*.lock
+*.rej
+*.orig
+.~*

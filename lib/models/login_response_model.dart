@@ -26,12 +26,31 @@ class LoginResponseModel {
       userData = UserModel.fromJson(json['user'] as Map<String, dynamic>);
     }
 
+    // Helper to safely convert to string
+    String toSafeString(dynamic value, [String defaultValue = '']) {
+      if (value == null) return defaultValue;
+      if (value is String) return value;
+      return value.toString();
+    }
+
+    // Helper to safely convert to int
+    int? toSafeInt(dynamic value) {
+      if (value == null) return null;
+      if (value is int) return value;
+      if (value is String) return int.tryParse(value);
+      return null;
+    }
+
     return LoginResponseModel(
       success: isSuccess,
-      message: json['message'] as String? ?? '',
-      accessToken: json['access_token'] as String?,
-      tokenType: json['token_type'] as String?,
-      expiresIn: json['expires_in'] as int?,
+      message: toSafeString(json['message'], ''),
+      accessToken: json['access_token'] != null
+          ? toSafeString(json['access_token'])
+          : null,
+      tokenType: json['token_type'] != null
+          ? toSafeString(json['token_type'])
+          : null,
+      expiresIn: toSafeInt(json['expires_in']),
       user: userData,
     );
   }

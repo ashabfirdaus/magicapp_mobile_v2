@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../config/routes.dart';
+import '../config/app_colors.dart';
+import '../services/auth_service.dart';
+import '../services/token_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +13,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final authService = AuthService();
+  bool _isLoggingOut = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -29,16 +34,49 @@ class _HomePageState extends State<HomePage> {
             child: const Text('Batal'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              // TODO: Clear token dari storage
-              Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+              await _performLogout();
             },
-            child: const Text('Logout'),
+            child: const Text('Logout', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _performLogout() async {
+    setState(() => _isLoggingOut = true);
+
+    try {
+      // Logout dan clear semua data di localStorage
+      await authService.logout();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Logout berhasil'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        // Navigate ke login page
+        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Logout gagal: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } finally {
+      setState(() => _isLoggingOut = false);
+    }
   }
 
   @override
@@ -46,11 +84,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Magic Laundry'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: AppColors.primary,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: _logout,
+            onPressed: _isLoggingOut ? null : _logout,
             tooltip: 'Logout',
           ),
         ],
@@ -166,7 +204,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: Colors.deepPurple),
+            Icon(icon, size: 40, color: AppColors.primary),
             const SizedBox(height: 8),
             Text(
               title,

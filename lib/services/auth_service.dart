@@ -159,8 +159,9 @@ class AuthService {
       print('Response Body: ${response.body}');
 
       if (response.body.isNotEmpty) {
-        final loginResponse =
-            LoginResponseModel.fromJson(jsonDecode(response.body));
+        final loginResponse = LoginResponseModel.fromJson(
+          jsonDecode(response.body),
+        );
 
         // Jika login berhasil, simpan token dan user data
         if (loginResponse.success &&
@@ -191,13 +192,13 @@ class AuthService {
   Future<SendOtpResponse> sendOtp({
     required String input,
     required String type, // 'email' atau 'phone'
-    bool? isEmail,
+    required bool isEmail,
   }) async {
     try {
       final body = <String, dynamic>{
-        'input': input,
-        'type': type,
-        if (isEmail != null) 'isemail': isEmail,
+        'username': input,
+        // 'type': type,
+        'isemail': isEmail,
       };
 
       final response = await http
@@ -230,12 +231,21 @@ class AuthService {
     required bool isEmail,
   }) async {
     try {
-      final type = isEmail ? 'email' : 'phone';
+      print('=== VERIFY OTP REQUEST ===');
+      print('Code: $code');
+      print('Input: $input');
+      print('Is Email: $isEmail');
+      print('URL: ${ApiConfig.verifyOtpUrl}');
+
+      final type = isEmail ? '1' : '0';
       final body = <String, dynamic>{
         'code': code,
-        'type': type,
-        'input': input,
+        'isemail': type,
+        'username': input,
       };
+
+      print('Request Body: ${jsonEncode(body)}');
+
       final response = await http
           .post(
             Uri.parse(ApiConfig.verifyOtpUrl),
@@ -250,9 +260,14 @@ class AuthService {
             onTimeout: () => throw Exception('Connection timeout'),
           );
 
-      if (response.statusCode == 200) {
-        final loginResponse =
-            LoginResponseModel.fromJson(jsonDecode(response.body));
+      print('=== VERIFY OTP RESPONSE ===');
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.body.isNotEmpty) {
+        final loginResponse = LoginResponseModel.fromJson(
+          jsonDecode(response.body),
+        );
 
         // Jika OTP verification berhasil, simpan token dan user data
         if (loginResponse.success &&
@@ -269,10 +284,26 @@ class AuthService {
 
         return loginResponse;
       } else {
-        throw Exception('Failed to verify OTP: ${response.statusCode}');
+        throw Exception(
+          'Empty response from server (Status: ${response.statusCode})',
+        );
       }
     } catch (e) {
+      print('OTP verification error: $e');
       throw Exception('Error verifying OTP: $e');
+    }
+  }
+
+  // Logout: Clear all authentication data from localStorage
+  Future<void> logout() async {
+    try {
+      print('=== LOGOUT ===');
+      await _tokenManager.clearToken();
+      print('All authentication data cleared from localStorage');
+      print('Logout successful');
+    } catch (e) {
+      print('Logout error: $e');
+      throw Exception('Error during logout: $e');
     }
   }
 }

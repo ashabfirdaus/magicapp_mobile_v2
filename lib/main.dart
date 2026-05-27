@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'config/index.dart';
 import 'config/routes.dart';
+import 'config/app_colors.dart';
 import 'services/token_manager.dart';
+import 'widgets/auth_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,16 +21,17 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Magic Laundry',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         useMaterial3: true,
       ),
-      initialRoute: AppRoutes.login,
+      // AuthChecker akan mengecek token dan navigate ke Home atau Login
+      home: const AuthChecker(),
+      // Tetap gunakan named routes untuk navigation dari dalam app
       onGenerateRoute: AppRoutes.generateRoute,
       routes: AppRoutes.getRoutes(),
     );

@@ -40,19 +40,26 @@ class UserModel {
 
   // Create model from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    // Helper function to safely convert any value to String
+    String toSafeString(dynamic value, [String defaultValue = '']) {
+      if (value == null) return defaultValue;
+      if (value is String) return value;
+      return value.toString();
+    }
+
     return UserModel(
-      key: json['key'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      username: json['username'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      phone: json['phone'] as String? ?? '',
-      address: json['address'] as String? ?? '',
-      role: json['role'] as String? ?? '',
-      path: json['path'] as String?,
-      referralCode:
-          json['referral_code'] as String? ??
-          json['referralCode'] as String? ??
-          '',
+      key: toSafeString(json['key'], ''),
+      name: toSafeString(json['name'], ''),
+      username: toSafeString(json['username'], ''),
+      email: toSafeString(json['email'], ''),
+      phone: toSafeString(json['phone'], ''),
+      address: toSafeString(json['address'], ''),
+      role: toSafeString(json['role'], ''),
+      path: json['path'] != null ? toSafeString(json['path']) : null,
+      referralCode: toSafeString(
+        json['referral_code'] ?? json['referralCode'],
+        '',
+      ),
     );
   }
 

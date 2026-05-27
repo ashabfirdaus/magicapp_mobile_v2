@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../services/auth_service.dart';
 import '../config/routes.dart';
+import '../config/app_colors.dart';
 import '../models/login_response_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -124,7 +126,6 @@ class _LoginPageState extends State<LoginPage> {
         _showSuccessSnackbar('Login berhasil!');
         Navigator.of(context).pushReplacementNamed(AppRoutes.home);
       } else {
-        print(response.message);
         _showErrorSnackbar(response.message ?? 'Login gagal');
       }
     } catch (e) {
@@ -145,7 +146,6 @@ class _LoginPageState extends State<LoginPage> {
         type: loginType,
         isEmail: _isEmailLogin,
       );
-      print(response.success);
       if (response.success) {
         setState(() => _otpReference = response.reference);
         _showSuccessSnackbar('Kode OTP telah dikirim ke WhatsApp Anda');
@@ -277,13 +277,13 @@ class _LoginPageState extends State<LoginPage> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: Colors.deepPurple.shade100,
+                        color: AppColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Icon(
                         Icons.local_laundry_service,
                         size: 40,
-                        color: Colors.deepPurple,
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -328,13 +328,13 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: !_usePhoneNumber
-                                  ? Colors.deepPurple
+                                  ? AppColors.primary
                                   : Colors.grey.shade300,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(12),
                             color: !_usePhoneNumber
-                                ? Colors.deepPurple.shade50
+                                ? AppColors.primary.withOpacity(0.05)
                                 : Colors.transparent,
                           ),
                           child: Column(
@@ -342,7 +342,7 @@ class _LoginPageState extends State<LoginPage> {
                               Icon(
                                 Icons.person,
                                 color: !_usePhoneNumber
-                                    ? Colors.deepPurple
+                                    ? AppColors.primary
                                     : Colors.grey,
                               ),
                               const SizedBox(height: 4),
@@ -352,7 +352,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: !_usePhoneNumber
-                                      ? Colors.deepPurple
+                                      ? AppColors.primary
                                       : Colors.grey,
                                 ),
                               ),
@@ -372,13 +372,13 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: _usePhoneNumber
-                                  ? Colors.deepPurple
+                                  ? AppColors.primary
                                   : Colors.grey.shade300,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(12),
                             color: _usePhoneNumber
-                                ? Colors.deepPurple.shade50
+                                ? AppColors.primary.withOpacity(0.05)
                                 : Colors.transparent,
                           ),
                           child: Column(
@@ -386,7 +386,7 @@ class _LoginPageState extends State<LoginPage> {
                               Icon(
                                 Icons.phone,
                                 color: _usePhoneNumber
-                                    ? Colors.deepPurple
+                                    ? AppColors.primary
                                     : Colors.grey,
                               ),
                               const SizedBox(height: 4),
@@ -396,7 +396,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: _usePhoneNumber
-                                      ? Colors.deepPurple
+                                      ? AppColors.primary
                                       : Colors.grey,
                                 ),
                               ),
@@ -437,14 +437,18 @@ class _LoginPageState extends State<LoginPage> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                              color: Colors.deepPurple,
+                              color: AppColors.primary,
                               width: 2,
                             ),
                           ),
                         ),
                         keyboardType: _usePhoneNumber
-                            ? TextInputType.phone
+                            ? TextInputType.number
                             : TextInputType.emailAddress,
+                        inputFormatters: _usePhoneNumber
+                            ? [FilteringTextInputFormatter.digitsOnly]
+                            : [],
+                        maxLength: _usePhoneNumber ? 15 : null,
                       ),
                       const SizedBox(height: 16),
                       // Check Account Button
@@ -452,7 +456,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: _isLoading ? null : _checkAccount,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.deepPurple,
+                          backgroundColor: AppColors.primary,
                           disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -536,7 +540,7 @@ class _LoginPageState extends State<LoginPage> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                              color: Colors.deepPurple,
+                              color: AppColors.primary,
                               width: 2,
                             ),
                           ),
@@ -548,7 +552,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: _isLoading ? null : _handleLogin,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.deepPurple,
+                          backgroundColor: AppColors.primary,
                           disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -580,7 +584,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: _isLoading ? null : _resetForm,
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          side: const BorderSide(color: Colors.deepPurple),
+                          side: const BorderSide(color: AppColors.primary),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -590,7 +594,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.deepPurple,
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
@@ -681,7 +685,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: const Text(
                           'Daftar di sini',
                           style: TextStyle(
-                            color: Colors.deepPurple,
+                            color: AppColors.primary,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
